@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FM Training Portal</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --bg-card: #1a1d27;
+    --bg-card-hover: #1f2235;
+    --bg-section: #14172050;
+    --accent: #f5a623;
+    --accent-dim: #f5a62325;
+    --accent2: #4f9cf9;
+    --accent2-dim: #4f9cf920;
+    --text-primary: #f0f2f8;
+    --text-secondary: #8b90a8;
+    --text-muted: #555870;
+    --border: #2a2d3e;
+    --border-hover: #3d4160;
+    --tag-bg: #1e2235;
+    --success: #4caf87;
+    --success-dim: #4caf8715;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0f1117 0%, #161925 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1.5rem;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+  .logo-text span {
+    color: var(--accent);
+  }
+  .header-search {
+    flex: 1;
+    max-width: 380px;
+    position: relative;
+  }
+  .header-search input {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px 8px 36px;
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .header-search input::placeholder { color: var(--text-muted); }
+  .header-search input:focus { border-color: var(--accent); }
+  .search-icon {
+    position: absolute;
+    left: 11px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 15px;
+    pointer-events: none;
+  }
+  .add-btn {
+    background: var(--accent);
+    color: #1a1000;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .add-btn:hover { opacity: 0.88; }
+
+  /* HERO */
+  .hero {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2.5rem;
+  }
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--accent), #f7c96a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    max-width: 520px;
+    margin-bottom: 1.5rem;
+  }
+  .stats-row {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 3rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .section-icon.orange { background: var(--accent-dim); color: var(--accent); }
+  .section-icon.blue { background: var(--accent2-dim); color: var(--accent2); }
+  .section-icon.green { background: var(--success-dim); color: var(--success); }
+  .section-icon.purple { background: #7c6af325; color: #9d92f5; }
+
+  .section-title {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+  .section-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2px 9px;
+    margin-left: 4px;
+  }
+  .divider {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  /* LINK CARD */
+  .link-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.125rem;
+    text-decoration: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .link-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .link-card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    transform: translateY(-1px);
+  }
+  .link-card:hover::before { opacity: 1; }
+  .link-card.blue::before { background: var(--accent2); }
+  .link-card.green::before { background: var(--success); }
+  .link-card.purple::before { background: #9d92f5; }
+
+  .card-icon-wrap {
+    width: 38px; height: 38px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .card-icon-wrap.gdoc { background: #1565c020; color: #4f9cf9; }
+  .card-icon-wrap.gslides { background: #f5a62320; color: var(--accent); }
+  .card-icon-wrap.dropbox { background: #0061ff20; color: #4f9cf9; }
+  .card-icon-wrap.drive { background: #4caf8720; color: var(--success); }
+
+  .card-body { flex: 1; min-width: 0; }
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-type {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .card-arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: color 0.15s;
+  }
+  .link-card:hover .card-arrow { color: var(--accent); }
+
+  /* HIDDEN for search */
+  .section.hidden { display: none; }
+  .link-card.hidden { display: none !important; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    animation: slideUp 0.18s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .modal p.sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+  .field {
+    margin-bottom: 1rem;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+  }
+  .field input,
+  .field select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    font-family: inherit;
+  }
+  .field select option { background: #1a1d27; }
+  .field input::placeholder { color: var(--text-muted); }
+  .field input:focus,
+  .field select:focus { border-color: var(--accent); }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .btn-cancel:hover { border-color: var(--border-hover); }
+  .btn-save {
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    color: #1a1000;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-save:hover { opacity: 0.88; }
+
+  /* NO RESULTS */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+  }
+  .no-results.visible { display: block; }
+  .no-results-icon { font-size: 40px; margin-bottom: 0.75rem; opacity: 0.5; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--success);
+    border-radius: 10px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-primary);
+    z-index: 300;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    .header-inner { gap: 0.75rem; }
+    .logo-text { display: none; }
+    .hero { padding: 2rem 1rem 1.5rem; }
+    .main { padding: 1.5rem 1rem; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .stats-row { gap: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-icon">☀️</div>
+      <span class="logo-text">FM <span>Training</span></span>
+    </a>
+    <div class="header-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search resources…" oninput="handleSearch()" />
+    </div>
+    <button class="add-btn" onclick="openModal()">
+      + Add Link
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Field Marketing<br><span>Training Portal</span></h1>
+    <p>Everything you need to learn, grow, and succeed — from day one onboarding to advanced sales techniques.</p>
+    <div class="stats-row">
+      <div class="stat">
+        <span class="stat-num" id="totalCount">11</span>
+        <span class="stat-label">Resources</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Training Tracks</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">Free</span>
+        <span class="stat-label">Always</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="main">
+
+  <!-- INITIAL TRAINING -->
+  <div class="section" id="section-initial">
+    <div class="section-header">
+      <div class="section-icon orange">📋</div>
+      <span class="section-title">Initial Training</span>
+      <span class="section-count" id="count-initial">2</span>
+      <div class="divider"></div>
+    </div>
+    <div class="cards-grid" id="grid-initial">
+      <a class="link-card orange" href="https://docs.google.com/document/d/1dwKyJwtlbzmUalEVTXStj2xtCkMABxxGF50s23iKB3g/edit?tab=t.0" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gdoc">📄</div>
+        <div class="card-body">
+          <div class="card-title">Attendance Policy</div>
+          <div class="card-type">📝 Google Doc</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card orange" href="https://docs.google.com/document/d/1i0TeeorhSKP7km9W81U7nRgykSGA9IaT/edit" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gdoc">📄</div>
+        <div class="card-body">
+          <div class="card-title">Agent Expectations</div>
+          <div class="card-type">📝 Google Doc</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- INTRO TO SOLAR -->
+  <div class="section" id="section-solar">
+    <div class="section-header">
+      <div class="section-icon orange">☀️</div>
+      <span class="section-title">Intro to Solar</span>
+      <span class="section-count" id="count-solar">4</span>
+      <div class="divider"></div>
+    </div>
+    <div class="cards-grid" id="grid-solar">
+      <a class="link-card" href="https://docs.google.com/presentation/d/1WKTe_r8NtlNo96y8SB9J9crIsfJ06qF2K31LoDUWEWI/edit?slide=id.p18#slide=id.p18" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">Solar 101</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://docs.google.com/presentation/d/1vTtZLYCbeCVQXbBRffSrrNsUd58tq1PVyJf0AlBHV1M/edit?slide=id.p3#slide=id.p3" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">Benefits of Solar in CA</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://docs.google.com/presentation/d/1NJby2JIlplu3MdoszDKi1VnubRBh3ur5qGrIYwPzThc/edit?slide=id.p5#slide=id.p5" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">How SCE Works</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://docs.google.com/presentation/d/1HcLUSwNPqWDj3KjZC3w_Vt8_h0NexITlbRMW6fj0NEk/edit?slide=id.p9#slide=id.p9" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">Solar Finance Options</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- INTRO TO APPOINTMENT SETTING -->
+  <div class="section" id="section-appt">
+    <div class="section-header">
+      <div class="section-icon blue">🎯</div>
+      <span class="section-title">Intro to Appointment Setting</span>
+      <span class="section-count" id="count-appt">5</span>
+      <div class="divider"></div>
+    </div>
+    <div class="cards-grid" id="grid-appt">
+      <a class="link-card blue" href="https://docs.google.com/document/d/1y3S4U_PIVjKpmkvtM4g81yS3zQZZdy5A-Qy-Qr-K4ek/edit?tab=t.0" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gdoc">📄</div>
+        <div class="card-body">
+          <div class="card-title">Script</div>
+          <div class="card-type">📝 Google Doc</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card blue" href="https://www.dropbox.com/scl/fo/jf1x6ieu0lbyxfmvfuma4/h?rlkey=r0gqyjmjby2eshc3111urzgia&e=2&st=wb4lpaug&dl=0" target="_blank" rel="noopener">
+        <div class="card-icon-wrap dropbox">🗂️</div>
+        <div class="card-body">
+          <div class="card-title">Objections</div>
+          <div class="card-type">📦 Dropbox</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card blue" href="https://docs.google.com/presentation/d/1_m7akXdysmn9-lCgacU5A0lV3eEnJzqDPfuLaEC9r7Y/edit?slide=id.p6#slide=id.p6" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">ACES</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card blue" href="https://docs.google.com/presentation/d/1D0LTx9_TkXzUfElAP7TGzlxb4U4BJ1vktsVznTIUxxA/edit?slide=id.p7#slide=id.p7" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">ADM</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card blue" href="https://docs.google.com/presentation/d/1LEnwbyYH2vJhRcXl7YXl3BklWTDCiC1nmnUtjS-fvHQ/edit?slide=id.p4#slide=id.p4" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">Confirmation</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- CLASSROOM TRAINING -->
+  <div class="section" id="section-classroom">
+    <div class="section-header">
+      <div class="section-icon green">🏫</div>
+      <span class="section-title">Classroom Training</span>
+      <span class="section-count" id="count-classroom">1</span>
+      <div class="divider"></div>
+    </div>
+    <div class="cards-grid" id="grid-classroom">
+      <a class="link-card green" href="https://docs.google.com/presentation/d/11nLrISW18LZI59H7CC1zeJ1rIS3Wutib_2MXdSU4s6o/edit?usp=drivesdk" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">D2D Bootcamp</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ADDITIONAL TRAININGS -->
+  <div class="section" id="section-additional">
+    <div class="section-header">
+      <div class="section-icon purple">⚡</div>
+      <span class="section-title">Additional Trainings</span>
+      <span class="section-count" id="count-additional">2</span>
+      <div class="divider"></div>
+    </div>
+    <div class="cards-grid" id="grid-additional">
+      <a class="link-card purple" href="https://docs.google.com/presentation/d/1CjjeBzkuEglRZEmZ936fLi-yTM48ZzPWRQRfD96tQF0/edit?slide=id.p7#slide=id.p7" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">"Not Interested"</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+      <a class="link-card purple" href="https://docs.google.com/presentation/d/1N4X5uyARt-gNH2OWAcCcfioMmAwhyfL2EYqh9x-3Fa4/edit?slide=id.p1#slide=id.p1" target="_blank" rel="noopener">
+        <div class="card-icon-wrap gslides">📊</div>
+        <div class="card-body">
+          <div class="card-title">5 Questions</div>
+          <div class="card-type">📊 Google Slides</div>
+        </div>
+        <span class="card-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="no-results" id="noResults">
+    <div class="no-results-icon">🔍</div>
+    <p style="font-size:16px; font-weight:500; margin-bottom:0.5rem;">No results found</p>
+    <p style="font-size:14px;">Try a different search term.</p>
+  </div>
+
+</main>
+
+<!-- ADD LINK MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <h2>Add a new resource</h2>
+    <p class="sub">It'll appear instantly in the right section for everyone.</p>
+    <div class="field">
+      <label>Resource Title</label>
+      <input type="text" id="newTitle" placeholder="e.g. Closing Techniques" />
+    </div>
+    <div class="field">
+      <label>URL</label>
+      <input type="url" id="newUrl" placeholder="https://docs.google.com/…" />
+    </div>
+    <div class="field">
+      <label>Section</label>
+      <select id="newSection">
+        <option value="initial">Initial Training</option>
+        <option value="solar">Intro to Solar</option>
+        <option value="appt">Intro to Appointment Setting</option>
+        <option value="classroom">Classroom Training</option>
+        <option value="additional">Additional Trainings</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveLink()">Add Resource</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  <span id="toastMsg">Resource added!</span>
+</div>
+
+<script>
+const SECTION_COLORS = {
+  initial: 'orange', solar: '', appt: 'blue', classroom: 'green', additional: 'purple'
+};
+
+function getLinkType(url) {
+  if (!url) return { icon: '🔗', label: 'Link' };
+  if (url.includes('docs.google.com/document')) return { icon: '📄', wrapClass: 'gdoc', label: '📝 Google Doc' };
+  if (url.includes('docs.google.com/presentation')) return { icon: '📊', wrapClass: 'gslides', label: '📊 Google Slides' };
+  if (url.includes('dropbox.com')) return { icon: '🗂️', wrapClass: 'dropbox', label: '📦 Dropbox' };
+  if (url.includes('drive.google.com')) return { icon: '📁', wrapClass: 'drive', label: '📂 Google Drive' };
+  if (url.includes('notebooklm.google.com')) return { icon: '📓', wrapClass: 'gdoc', label: '📓 NotebookLM' };
+  return { icon: '🔗', wrapClass: 'gdoc', label: '🔗 Link' };
+}
+
+function createCard(title, url, sectionKey) {
+  const color = SECTION_COLORS[sectionKey] || '';
+  const type = getLinkType(url);
+  const a = document.createElement('a');
+  a.className = 'link-card' + (color ? ' ' + color : '');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.setAttribute('data-title', title.toLowerCase());
+  a.innerHTML = `
+    <div class="card-icon-wrap ${type.wrapClass || 'gdoc'}">${type.icon}</div>
+    <div class="card-body">
+      <div class="card-title">${title}</div>
+      <div class="card-type">${type.label}</div>
+    </div>
+    <span class="card-arrow">↗</span>`;
+  return a;
+}
+
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('newTitle').focus(), 100);
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('newTitle').value = '';
+  document.getElementById('newUrl').value = '';
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function updateCount(sectionKey) {
+  const grid = document.getElementById('grid-' + sectionKey);
+  const count = grid.querySelectorAll('.link-card').length;
+  document.getElementById('count-' + sectionKey).textContent = count;
+  updateTotal();
+}
+
+function updateTotal() {
+  const all = document.querySelectorAll('.link-card');
+  document.getElementById('totalCount').textContent = all.length;
+}
+
+function saveLink() {
+  const title = document.getElementById('newTitle').value.trim();
+  const url = document.getElementById('newUrl').value.trim();
+  const section = document.getElementById('newSection').value;
+  if (!title) { document.getElementById('newTitle').focus(); return; }
+  if (!url || !url.startsWith('http')) { document.getElementById('newUrl').focus(); return; }
+
+  const grid = document.getElementById('grid-' + section);
+  const card = createCard(title, url, section);
+  grid.appendChild(card);
+  updateCount(section);
+  closeModal();
+  showToast(`"${title}" added to ${section === 'initial' ? 'Initial Training' : section === 'solar' ? 'Intro to Solar' : section === 'appt' ? 'Appointment Setting' : section === 'classroom' ? 'Classroom Training' : 'Additional Trainings'}.`);
+}
+
+function handleSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let anyVisible = false;
+  document.querySelectorAll('.section').forEach(section => {
+    let sectionHasMatch = false;
+    section.querySelectorAll('.link-card').forEach(card => {
+      const title = card.getAttribute('data-title') || card.querySelector('.card-title').textContent.toLowerCase();
+      const show = !q || title.includes(q);
+      card.classList.toggle('hidden', !show);
+      if (show) sectionHasMatch = true;
+    });
+    section.classList.toggle('hidden', !sectionHasMatch);
+    if (sectionHasMatch) anyVisible = true;
+  });
+  document.getElementById('noResults').classList.toggle('visible', !anyVisible);
+}
+
+document.querySelectorAll('.link-card').forEach(card => {
+  card.setAttribute('data-title', card.querySelector('.card-title').textContent.toLowerCase());
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+});
+</script>
+</body>
+</html>
